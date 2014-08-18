@@ -19,6 +19,7 @@
 #include <GblDataWriter.h>
 #include <GblTrackWriter.h>
 #include <HpsParticleDataWriter.h>
+#include <EcalScoringPlaneDataWriter.h>
 
 class HpsEventBuilder : public EventBuilder {
 
@@ -43,6 +44,7 @@ class HpsEventBuilder : public EventBuilder {
 		HpsParticleDataWriter* particle_writer; 
 		GblDataWriter* gbl_data_writer;
 		GblTrackWriter* gbl_track_writer;
+		EcalScoringPlaneDataWriter* ecal_sp_writer; 
 
 		bool m_run_gbl;
 };

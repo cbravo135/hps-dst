@@ -17,6 +17,7 @@ HpsEventBuilder::HpsEventBuilder() : m_run_gbl(false)
 	particle_writer = new HpsParticleDataWriter(); 
 	gbl_data_writer  = new GblDataWriter();
 	gbl_track_writer  = new GblTrackWriter();
+	ecal_sp_writer = new EcalScoringPlaneDataWriter();
 }
 
 HpsEventBuilder::~HpsEventBuilder()
@@ -27,6 +28,7 @@ HpsEventBuilder::~HpsEventBuilder()
 	delete particle_writer; 
 	delete gbl_data_writer;
 	delete gbl_track_writer;
+	delete ecal_sp_writer; 
 }
 
 void HpsEventBuilder::makeHpsEvent(EVENT::LCEvent* event, HpsEvent* hps_event)
@@ -61,6 +63,9 @@ void HpsEventBuilder::makeHpsEvent(EVENT::LCEvent* event, HpsEvent* hps_event)
 		gbl_track_writer->writeData(hps_event);
 
 	}
+
+	// Write the EcalScoringPlaneData to HpsEvent
+	ecal_sp_writer->writeData(event, hps_event);
 }
 
 void HpsEventBuilder::setBField(const double b_field)
