@@ -19,5 +19,6 @@
 #pragma link C++ class GblTrack+;
 #pragma link C++ class GblTrackData+;
 #pragma link C++ class GblStripData+;
+#pragma link C++ class EcalScoringPlaneHit+;
 
 #endif
