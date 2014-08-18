@@ -25,11 +25,13 @@ HpsEvent::HpsEvent()
         gbl_tracks(new TClonesArray("GblTrack", 1000)),
         gbl_tracks_data(new TClonesArray("GblTrackData", 1000)),
         gbl_strips_data(new TClonesArray("GblStripData", 1000)),
+		ecal_sp_hits(new TClonesArray("EcalScoringPlaneHit", 1000)), 
         event_number(0), run_number(0), n_tracks(0), n_svt_hits(0),
         n_ecal_clusters(0), n_ecal_hits(0), n_muon_clusters(0),
         n_fs_particles(0), n_uc_vtx_particles(0), 
         n_bsc_vtx_particles(0), n_tc_vtx_particles(0), 
-        n_mc_particles(0), n_gbl_tracks_data(0), n_gbl_strips_data(0)
+        n_mc_particles(0), n_gbl_tracks_data(0), n_gbl_strips_data(0), 
+		n_ecal_sp_hits(0)
 {}
 
 HpsEvent::HpsEvent(const HpsEvent &hpsEventObj)
@@ -46,7 +48,8 @@ HpsEvent::HpsEvent(const HpsEvent &hpsEventObj)
         mc_particles(new TClonesArray("HpsMCParticle", 1000)),
         gbl_tracks(new TClonesArray("GblTrack", 1000)),
         gbl_tracks_data(new TClonesArray("GblTrackData", 1000)),
-        gbl_strips_data(new TClonesArray("GblStripData", 1000))
+        gbl_strips_data(new TClonesArray("GblStripData", 1000)),
+		ecal_sp_hits(new TClonesArray("EcalScoringPlaneHit", 1000)) 
 {
     this->event_number = hpsEventObj.event_number; 
     this->run_number   = hpsEventObj.run_number; 
@@ -64,6 +67,7 @@ HpsEvent::HpsEvent(const HpsEvent &hpsEventObj)
     this->n_gbl_tracks = hpsEventObj.n_gbl_tracks;
     this->n_gbl_tracks_data = hpsEventObj.n_gbl_tracks_data;
     this->n_gbl_strips_data = hpsEventObj.n_gbl_strips_data;
+	this->n_ecal_sp_hits = hpsEventObj.n_ecal_sp_hits; 
 
     *tracks    = *hpsEventObj.tracks;
     *svt_hits  = *hpsEventObj.svt_hits;  
@@ -78,6 +82,7 @@ HpsEvent::HpsEvent(const HpsEvent &hpsEventObj)
     *gbl_tracks = *hpsEventObj.gbl_tracks;
     *gbl_tracks_data = *hpsEventObj.gbl_tracks_data;
     *gbl_strips_data = *hpsEventObj.gbl_strips_data;
+	*ecal_sp_hits = *hpsEventObj.ecal_sp_hits; 
 }
 
 
@@ -97,6 +102,7 @@ HpsEvent::~HpsEvent()
     delete gbl_tracks;
     delete gbl_tracks_data;
     delete gbl_strips_data;
+	delete ecal_sp_hits; 
 }
 
 HpsEvent &HpsEvent::operator=(const HpsEvent &hpsEventObj)
@@ -124,6 +130,7 @@ HpsEvent &HpsEvent::operator=(const HpsEvent &hpsEventObj)
     this->n_gbl_tracks     = hpsEventObj.n_gbl_tracks; 
     this->n_gbl_tracks_data     = hpsEventObj.n_gbl_tracks_data; 
     this->n_gbl_strips_data     = hpsEventObj.n_gbl_strips_data; 
+	this->n_ecal_sp_hits = hpsEventObj.n_ecal_sp_hits; 
 
     tracks = new TClonesArray("SvtTrack", 1000);
     svt_hits = new TClonesArray("SvtHit", 1000);
@@ -137,6 +144,7 @@ HpsEvent &HpsEvent::operator=(const HpsEvent &hpsEventObj)
     gbl_tracks = new TClonesArray("GblTrack", 1000);
     gbl_tracks_data = new TClonesArray("GblTrackData", 1000);
     gbl_strips_data = new TClonesArray("GblStripData", 1000);
+	ecal_sp_hits = new TClonesArray("EcalScoringPlaneHit", 1000); 
 
     *tracks    = *hpsEventObj.tracks;
     *svt_hits  = *hpsEventObj.svt_hits;  
@@ -151,6 +159,7 @@ HpsEvent &HpsEvent::operator=(const HpsEvent &hpsEventObj)
     *gbl_tracks = *hpsEventObj.gbl_tracks;
     *gbl_tracks_data = *hpsEventObj.gbl_tracks_data;
     *gbl_strips_data = *hpsEventObj.gbl_strips_data;
+	*ecal_sp_hits = *hpsEventObj.ecal_sp_hits;  
 
     return *this;     
 }
@@ -171,6 +180,7 @@ void HpsEvent::Clear(Option_t * /*option*/)
     gbl_tracks->Clear("C");
     gbl_tracks_data->Clear("C");
     gbl_strips_data->Clear("C");
+	ecal_sp_hits->Clear("C"); 
     n_ecal_clusters = 0;
     n_ecal_hits = 0;
     n_muon_clusters = 0;
@@ -184,6 +194,7 @@ void HpsEvent::Clear(Option_t * /*option*/)
     n_gbl_tracks = 0;
     n_gbl_tracks_data = 0;
     n_gbl_strips_data = 0;
+	n_ecal_sp_hits = 0; 
     trigger_bits.clear();
 }
 
@@ -213,12 +224,6 @@ MuonCluster* HpsEvent::addMuonCluster()
 	return (MuonCluster*) muon_clusters->ConstructedAt(n_muon_clusters++);
 }
 
-/*HpsParticle* HpsEvent::addFSParticle()
-{
-    return (HpsParticle*) fs_particles->ConstructedAt(n_fs_particles++);
-}*/
-
-//HpsParticle* HpsEvent::addVtxParticle(collection_t collection_type)
 HpsParticle* HpsEvent::addParticle(collection_t collection_type)
 {
 	switch(collection_type) { 
@@ -241,6 +246,25 @@ HpsMCParticle* HpsEvent::addHpsMCParticle()
 	return (HpsMCParticle*) mc_particles->ConstructedAt(n_mc_particles++);
 }
 
+GblTrack* HpsEvent::addGblTrack()
+{
+	return (GblTrack*) gbl_tracks->ConstructedAt(n_gbl_tracks++);
+}
+
+GblTrackData* HpsEvent::addGblTrackData()
+{
+	return (GblTrackData*) gbl_tracks_data->ConstructedAt(n_gbl_tracks_data++);
+}
+
+GblStripData* HpsEvent::addGblStripData()
+{
+	return (GblStripData*) gbl_strips_data->ConstructedAt(n_gbl_strips_data++);
+}
+
+EcalScoringPlaneHit* HpsEvent::addEcalScoringPlaneHit()
+{
+	return (EcalScoringPlaneHit*) ecal_sp_hits->ConstructedAt(n_ecal_sp_hits++); 
+}
 
 int HpsEvent::getNumberOfParticles(collection_t collection_type) const
 {
@@ -259,20 +283,6 @@ int HpsEvent::getNumberOfParticles(collection_t collection_type) const
 	}
 }
 
-GblTrack* HpsEvent::addGblTrack()
-{
-	return (GblTrack*) gbl_tracks->ConstructedAt(n_gbl_tracks++);
-}
-
-GblTrackData* HpsEvent::addGblTrackData()
-{
-	return (GblTrackData*) gbl_tracks_data->ConstructedAt(n_gbl_tracks_data++);
-}
-
-GblStripData* HpsEvent::addGblStripData()
-{
-	return (GblStripData*) gbl_strips_data->ConstructedAt(n_gbl_strips_data++);
-}
 
 SvtTrack* HpsEvent::getTrack(int track_n)
 {
@@ -319,14 +329,6 @@ HpsMCParticle* HpsEvent::getMCParticle(int mc_particle_n)
 	return (HpsMCParticle*) mc_particles->At(mc_particle_n);
 }
 
-/*
-HpsParticle* HpsEvent::getFSParticle(int fs_particle_n)
-{
-    return (HpsParticle*) fs_particles->At(fs_particle_n); 
-}*/
-
-//HpsParticle* HpsEvent::getVtxParticle(collection_t collection_type,
-//									  int vtx_particle_n)
 HpsParticle* HpsEvent::getParticle(collection_t collection_type, int particle_n)
 {
 	switch(collection_type){ 
@@ -342,4 +344,9 @@ HpsParticle* HpsEvent::getParticle(collection_t collection_type, int particle_n)
 			// TODO: If the collection type is invalid, throw an exception instead.	
 			return NULL; 
 	}
+}
+
+EcalScoringPlaneHit* HpsEvent::getEcalScoringPlaneHit(int ecal_sp_hit_n)
+{
+	return (EcalScoringPlaneHit*) ecal_sp_hits->At(ecal_sp_hit_n);
 }

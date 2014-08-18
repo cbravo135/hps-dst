@@ -30,6 +30,7 @@
 #include <GblTrackData.h>
 #include <GblStripData.h>
 #include <GblTrack.h>
+#include <EcalScoringPlaneHit.h>
 
 class HpsEvent : public TObject { 
 
@@ -54,12 +55,11 @@ class HpsEvent : public TObject {
         EcalHit* 		addEcalHit();
         MuonCluster* 	addMuonCluster();
         HpsParticle*    addParticle(collection_t); 
-        //HpsParticle*    addFSParticle();
-        //HpsParticle*    addVtxParticle(collection_t); 
         HpsMCParticle*  addHpsMCParticle();
         GblTrack*   	addGblTrack();
         GblTrackData* 	addGblTrackData();
         GblStripData* 	addGblStripData();
+		EcalScoringPlaneHit* addEcalScoringPlaneHit(); 
 
         void setEventNumber(int event_number){ this->event_number = event_number; };
         void setRunNumber(int run_number){ this->run_number = run_number; };
@@ -74,7 +74,8 @@ class HpsEvent : public TObject {
         int getNumberOfGblTracks()      const  { return n_gbl_tracks; };
         int getNumberOfGblTracksData()  const  { return n_gbl_tracks_data; };
         int getNumberOfGblStripData()   const  { return n_gbl_strips_data; };
-        std::vector<int> getTriggerBitInfo() const { return trigger_bits; };
+		int getNumberOfEcalScoringPlaneHits() const { return n_ecal_sp_hits; }; 
+		std::vector<int> getTriggerBitInfo() const { return trigger_bits; };
 
         SvtTrack*      getTrack(int);
         SvtHit*        getSvtHit(int);
@@ -83,11 +84,10 @@ class HpsEvent : public TObject {
         MuonCluster*   getMuonCluster(int);
         HpsMCParticle* getMCParticle(int);
         HpsParticle*   getParticle(collection_t, int); 
-        //HpsParticle*   getFSParticle(int); 
-        //HpsParticle*   getVtxParticle(collection_t, int); 
         GblTrack*      getGblTrack(int);
         GblTrackData*  getGblTrackData(int);
         GblStripData*  getGblStripData(int);
+		EcalScoringPlaneHit* getEcalScoringPlaneHit(int); 
 
         ClassDef(HpsEvent, 1);	
 
@@ -106,6 +106,7 @@ class HpsEvent : public TObject {
         TClonesArray* gbl_tracks;          //->
         TClonesArray* gbl_tracks_data;     //->
         TClonesArray* gbl_strips_data;     //->
+		TClonesArray* ecal_sp_hits;		   //->
 
         int event_number;
         int run_number;
@@ -122,7 +123,8 @@ class HpsEvent : public TObject {
         int n_gbl_tracks;
         int n_gbl_tracks_data;
         int n_gbl_strips_data;
-        
+		int n_ecal_sp_hits; 
+
 		std::vector<int> trigger_bits;
 };
 
