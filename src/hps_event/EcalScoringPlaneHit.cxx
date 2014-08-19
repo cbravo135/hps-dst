@@ -8,12 +8,11 @@
  */
 
 #include <EcalScoringPlaneHit.h>
-#include<iostream>
 
 ClassImp(EcalScoringPlaneHit)
 
 EcalScoringPlaneHit::EcalScoringPlaneHit() 
-	: TObject(), 
+	: TObject(), particle(NULL),
 	  ecal_sp_x(0), ecal_sp_y(0), ecal_sp_z(0)
 {}
 
@@ -41,4 +40,9 @@ std::vector<double> EcalScoringPlaneHit::getPosition() const
 	position[1] = ecal_sp_y; 
 	position[2] = ecal_sp_z; 
 	return position;
+}
+
+HpsParticle* EcalScoringPlaneHit::getParticle()
+{
+	return (HpsParticle*) particle.GetObject();
 }

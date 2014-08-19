@@ -17,6 +17,11 @@
 //--- ROOT ---//
 //------------//
 #include <TObject.h>
+#include <TRef.h>
+
+//--- HPS Event ---//
+//-----------------//
+#include <HpsParticle.h>
 
 class EcalScoringPlaneHit : public TObject { 
 
@@ -26,13 +31,17 @@ class EcalScoringPlaneHit : public TObject {
 		virtual ~EcalScoringPlaneHit();
 		void Clear(Option_t *option="");
 
+		void setParticle(HpsParticle* particle){this->particle = particle; };
 		void setPosition(const double*);
 
+		HpsParticle* getParticle();
 		std::vector<double> getPosition() const;
 
 		ClassDef(EcalScoringPlaneHit, 1);
 
 	private:
+
+		TRef particle;
 
 		double ecal_sp_x;
 		double ecal_sp_y;
