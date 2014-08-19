@@ -32,9 +32,13 @@ target_link_libraries(GblDataWriter ${LCIO_LIB} HpsEvent)
 add_library(GblTrackWriter GblTrackWriter.cxx)
 target_link_libraries(GblTrackWriter HpsGblFitter HpsEvent)
 
+# Create the EcalScoringPlaneDataWriter library
+add_library(EcalScoringPlaneDataWriter EcalScoringPlaneDataWriter.cxx)
+target_link_libraries(EcalScoringPlaneDataWriter ${LCIO_LIBRARY} HpsEvent)
+
 # Create the HpsEventBuilder library
 add_library(HpsEventBuilder HpsEventBuilder.cxx)
-target_link_libraries(HpsEventBuilder SvtDataWriter EcalDataWriter MCParticleDataWriter HpsParticleDataWriter GblDataWriter GblTrackWriter)
+target_link_libraries(HpsEventBuilder SvtDataWriter EcalDataWriter MCParticleDataWriter HpsParticleDataWriter GblDataWriter GblTrackWriter EcalScoringPlaneDataWriter)
 
 # Create the dst_writer executable
 add_executable(dst_maker dst_maker.cxx)
