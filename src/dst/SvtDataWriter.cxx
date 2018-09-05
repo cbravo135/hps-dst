@@ -79,19 +79,19 @@ void SvtDataWriter::writeData(EVENT::LCEvent* event, HpsEvent* hps_event) {
 
     // Get the collection of LCRelations between track data variables 
     // (TrackData) and the corresponding track.
-    EVENT::LCCollection* track_data = (EVENT::LCCollection*) event->getCollection(TRACK_DATA_REL_COL_NAME);
+    //EVENT::LCCollection* track_data = (EVENT::LCCollection*) event->getCollection(TRACK_DATA_REL_COL_NAME);
 
     // Instantiate an LCRelation navigator which will allow faster access
     // to TrackData objects  
-    UTIL::LCRelationNavigator* track_data_nav = new UTIL::LCRelationNavigator(track_data);
+    //UTIL::LCRelationNavigator* track_data_nav = new UTIL::LCRelationNavigator(track_data);
 
     // Get the collection of LCRelations between GBL kink data variables 
     // (GBLKinkData) and the corresponding track.
-    EVENT::LCCollection* gbl_kink_data = (EVENT::LCCollection*) event->getCollection(GBL_KINK_DATA_REL_COL_NAME);
+    //EVENT::LCCollection* gbl_kink_data = (EVENT::LCCollection*) event->getCollection(GBL_KINK_DATA_REL_COL_NAME);
 
     // Instantiate an LCRelation navigator which will allow faster access 
     // to GBLKinkData object
-    UTIL::LCRelationNavigator* gbl_kink_data_nav = new UTIL::LCRelationNavigator(gbl_kink_data);
+    //UTIL::LCRelationNavigator* gbl_kink_data_nav = new UTIL::LCRelationNavigator(gbl_kink_data);
 
     // Create a map between an LCIO GBL track and the corresponding HpsEvent
     // GBL track. This map will be used when relating an HpsEvent GBL track to 
@@ -107,7 +107,6 @@ void SvtDataWriter::writeData(EVENT::LCEvent* event, HpsEvent* hps_event) {
        
         // Don't write partial tracks to the DST.  Partial tracks are tracks
         // whose hits are a subset of another track in the event.
-        if (tracks == (EVENT::LCCollection*) event->getCollection(PARTIAL_TRACKS_COL_NAME)) continue;
 
         // Loop over all the LCIO Tracks and add them to the HPS event.
         for (int track_n = 0; track_n < tracks->getNumberOfElements(); ++track_n) {
@@ -127,22 +126,10 @@ void SvtDataWriter::writeData(EVENT::LCEvent* event, HpsEvent* hps_event) {
                 gbl_track_map[(GblTrack*) svt_track] = track;
 
                 // Get the list of GBLKinkData associated with the LCIO Track
-                EVENT::LCObjectVec gbl_kink_data_list = gbl_kink_data_nav->getRelatedFromObjects(track);
+                //EVENT::LCObjectVec gbl_kink_data_list = gbl_kink_data_nav->getRelatedFromObjects(track);
 
                 // The container of GBLKinkData objects should only contain a 
                 // single object. If not, throw an exception
-                if (gbl_kink_data_list.size() != 1) { 
-                    throw std::runtime_error("[ SvtDataWriter ]: The data structure has the wrong format."); 
-                }
-
-                // Get the list GBLKinkData GenericObject associated with the LCIO Track
-                IMPL::LCGenericObjectImpl* gbl_kink_datum = (IMPL::LCGenericObjectImpl*) gbl_kink_data_list.at(0);
-
-                // Set the lambda and phi kink values
-                for (int kink_index = 0; kink_index < gbl_kink_datum->getNDouble(); ++kink_index) { 
-                    ((GblTrack*) svt_track)->setLambdaKink(kink_index, gbl_kink_datum->getFloatVal(kink_index));
-                    ((GblTrack*) svt_track)->setPhiKink(kink_index, gbl_kink_datum->getDoubleVal(kink_index));
-                }
 
             } else { 
                 // Add an SvtTrack object to the HPS event
@@ -167,32 +154,22 @@ void SvtDataWriter::writeData(EVENT::LCEvent* event, HpsEvent* hps_event) {
 
             // Set the position of the extrapolated track at the Ecal face. The
             // extrapolation uses the full 3D field map.
-            const EVENT::TrackState* track_state = track->getTrackState(EVENT::TrackState::AtCalorimeter);
-            if (track_state == NULL) {
-               throw std::runtime_error("[ SvtDataWriter ]: Track does not have a track state at the Ecal."); 
-            } 
-            double position_at_ecal[3] = { 
-               track_state->getReferencePoint()[1],  
-               track_state->getReferencePoint()[2],  
-               track_state->getReferencePoint()[0]
-            };  
-            svt_track->setPositionAtEcal(position_at_ecal); 
         
             // Get the list of TrackData associated with the LCIO Track
-            EVENT::LCObjectVec track_data_list = track_data_nav->getRelatedFromObjects(track);
+            //EVENT::LCObjectVec track_data_list = track_data_nav->getRelatedFromObjects(track);
             
             // The container of TrackData objects should only contain a single
             //  object.  If not, throw an exception.
-            if (track_data_list.size() != 1) { 
-                throw std::runtime_error("[ SvtDataWriter ]: The data structure has the wrong format.");
-            }
+            //if (track_data_list.size() != 1) { 
+            //    throw std::runtime_error("[ SvtDataWriter ]: The data structure has the wrong format.");
+            //}
 
             // Get the TrackData GenericObject associated with the LCIO Track
-            IMPL::LCGenericObjectImpl* track_datum = (IMPL::LCGenericObjectImpl*) track_data_list.at(0);
+            //IMPL::LCGenericObjectImpl* track_datum = (IMPL::LCGenericObjectImpl*) track_data_list.at(0);
 
             // Check that the TrackData data structure is correct.  If it's
             // not, throw a runtime exception.   
-            if (track_datum->getNDouble() != 12 || track_datum->getNFloat() != 1 
+            /*if (track_datum->getNDouble() != 12 || track_datum->getNFloat() != 1 
                     || track_datum->getNInt() != 1) {
                 throw std::runtime_error("[ SvtDataWriter ]: The collection " + TRACK_DATA_COL_NAME 
                         + " has the wrong structure.");
@@ -208,7 +185,7 @@ void SvtDataWriter::writeData(EVENT::LCEvent* event, HpsEvent* hps_event) {
 
             // Set the volume (top/bottom) in which the SvtTrack resides
             svt_track->setTrackVolume(track_datum->getIntVal(0));
-        
+            */
             // Get the collection of 3D hits associated with a LCIO Track
             EVENT::TrackerHitVec tracker_hits = track->getTrackerHits();
 
@@ -224,39 +201,17 @@ void SvtDataWriter::writeData(EVENT::LCEvent* event, HpsEvent* hps_event) {
     }
 
     // Delete all LCRelations navigator objects
-    delete track_data_nav;
-    delete gbl_kink_data_nav;
+    //delete track_data_nav;
+    //delete gbl_kink_data_nav;
 
-    // Get the collection of LCRelations between seed tracks and a GBL tracks.
-    EVENT::LCCollection* seed_to_gbl_relations = (EVENT::LCCollection*) event->getCollection(SEED_TO_GBL_REL_COL_NAME); 
    
     // Instantiate an LCRelation navigator which will allow faster access
     // to the seed to GBL LCRelations
-    UTIL::LCRelationNavigator* seed_to_gbl_relations_nav = new UTIL::LCRelationNavigator(seed_to_gbl_relations); 
 
     for (int gbl_track_n = 0; gbl_track_n < hps_event->getNumberOfGblTracks(); ++gbl_track_n) { 
         GblTrack* gbl_track = hps_event->getGblTrack(gbl_track_n); 
         
-        // Get the list of LCRelations associated with the LCIO GBL track used
-        // to create this HpsEvent GBL track
-        EVENT::LCObjectVec seed_to_gbl_list 
-            = seed_to_gbl_relations_nav->getRelatedFromObjects(gbl_track_map[gbl_track]); 
 
-        // There should only be a single LCRelation between a LCIO GBL track 
-        // and a LCIO seed trak.
-        if (seed_to_gbl_list.size() != 1) { 
-            throw std::runtime_error("[ SvtDataWriter ]: The data structure has the wrong format.");
-        }
-
-        // Get the TrackData GenericObject associated with the LCIO Track
-        EVENT::Track* seed_track = (EVENT::Track*) seed_to_gbl_list.at(0);
-
-        // Set a reference to the HpsEvent seed track
-        gbl_track->setSeedTrack(track_map[seed_track]);
-
-        // Set a reference from the seed track to the GBL track
-        track_map[seed_track]->setGblTrack(gbl_track);
     }
 
-    delete seed_to_gbl_relations_nav; 
 }

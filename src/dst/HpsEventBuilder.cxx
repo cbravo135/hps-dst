@@ -46,10 +46,10 @@ void HpsEventBuilder::makeHpsEvent(EVENT::LCEvent* event, HpsEvent* hps_event) {
     svt_writer->writeData(event, hps_event);
 
     // Write MC particle data to the HpsEvent
-    mc_particle_writer->writeData(event, hps_event);
+    //mc_particle_writer->writeData(event, hps_event);
 
     // Write the HpsParticle data to the HpsEvent
-    particle_writer->writeData(event, hps_event); 
+    //particle_writer->writeData(event, hps_event); 
 
 }
 
@@ -112,7 +112,7 @@ void HpsEventBuilder::writeEventData(EVENT::LCEvent* lc_event, HpsEvent* hps_eve
     //
 
     // Get the LCIO GenericObject collection containing the RF times
-    EVENT::LCCollection* rf_hits = (EVENT::LCCollection*) lc_event->getCollection(RF_HIT_COL_NAME);
+    /*EVENT::LCCollection* rf_hits = (EVENT::LCCollection*) lc_event->getCollection(RF_HIT_COL_NAME);
 
     // The collection should only have a single RFHit object per event
     if (rf_hits->getNumberOfElements() > 1) { 
@@ -136,5 +136,5 @@ void HpsEventBuilder::writeEventData(EVENT::LCEvent* lc_event, HpsEvent* hps_eve
         for (int rf_hit_channel = 0; rf_hit_channel < rf_hit->getNDouble(); ++rf_hit_channel) { 
             hps_event->setRfTime(rf_hit_channel, rf_hit->getDoubleVal(rf_hit_channel));  
         }
-    }
+    }*/
 }
